@@ -1,0 +1,52 @@
+Windows:
+*****************
+# http://docs.wand-py.org/en/0.4.1/guide/install.html
+
+Install python (version 3) 
+
+Do not install the latest version of imagemagick. Install the following 
+versions or anything inbetween:
+ImageMagick-6.8.9-6-Q16-x64-dll.exe (64 bit) 
+ImageMagick-6.9.10-10-Q16-x64-dll.exe (64 bit)
+
+Make sure all the following 3 things are of 64 bit
+    (a) operating system of windows
+    (b) python 3
+    (c) imagemagick
+
+You can download the above version from 
+http://www.imagemagick.org/download/binaries/
+
+Install imagemagick version
+    
+    (a) Tick mark Python path
+
+    (b) Note that you have to check Install development headers and libraries
+    for C and C++ to make Wand able to link to it.
+
+    (c) Set MAGICK_HOME environment variable to the path of ImageMagick
+    (e.g. C:\Program Files\ImageMagick-6.7.7-Q16). You can set it
+    in Computer > Properties > Advanced system settings > Advanced
+    > Environment Variables.
+ 
+Install python modules via the command
+
+    pip install packagename
+
+    Upgrade pip via the command
+    python -m pip install --upgrade pip
+
+Required python packages for CLI:
+    pypdf2
+    reportlab
+    opencv-python
+    wand
+    matplotlib
+    numpy
+Required python packages for GUI:
+    PyQt5
+
+# Installation
+Copy the files sign-pdf.py and sign-pdf-gui.py to %PATH%.
+Logout and login (if necessary).
+
