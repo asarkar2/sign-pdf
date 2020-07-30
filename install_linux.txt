@@ -1,0 +1,23 @@
+For linux (Ubuntu):
+*****************
+
+Requirements:
+==============
+CLI:
+sudo apt install python3-wand python3-opencv python3-tk python3-pypdf2
+sudo apt install python3-reportlab python3-matplotlib python3-numpy
+
+GUI:
+sudo apt install python3-pyqt5
+
+Install
+=============
+The copy the files sign-pdf.py and sign-pdf-gui.py to $PATH.
+
+Example:
+    mkdir -p ~/bin/
+    cp sign-pdf.py ~/bin/
+    cp sign-pdf-gui.py ~/bin/
+
+Logout and login back (if required).
+
