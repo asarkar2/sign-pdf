@@ -1175,7 +1175,7 @@ def helptext(sname,athr,vrsn,app):
     print("Author :", athr)
     print("Version :", vrsn)
     print("")
-    print("For command line usage check '", app, "--help'", sep = '')
+    print("For command line usage check '", app, " --help'", sep = '')
     print("The graphical interface is self-explanatory.")
     return
 
