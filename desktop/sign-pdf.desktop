@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Sign PDF
+Comment=Sign PDF with signature (image file)
+TryExec=sign-pdf-gui.py
+Exec=sign-pdf-gui.py %F
+Icon=/usr/local/share/sign-pdf/icon/sign-pdf.png
+# Icon=sign-pdf
+Terminal=false
+Categories=Office;Graphics;
+StartupNotify=false
+MimeType=application/pdf;
