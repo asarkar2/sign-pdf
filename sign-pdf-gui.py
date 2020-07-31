@@ -1,24 +1,11 @@
 #!/usr/bin/env python3
 
-# TODO
-# *) [D] Progress Bar 
-# *) [D] Cancel buttons
-# *) [D] Disable all other buttons once Apply button is pressed until 
-#        job finishes
-# *) [D] About button and dialog
-# *) [D] Software icon
-# *) [D] Status Bar
-# *) [D] Apply: Check for mandatory fields: at least one PDF file and show 
-#        error dialog
-# *) [D] MessageDialog: pass argument
-# *) [D] Edit button
-# *) [D] Add image by template
-# *) [D] Update dictionary on table cell change
-
 import time
 from subprocess import Popen, PIPE
 import shlex
 import os
+import re
+from glob import glob
 import signal
 import sys
 from PyQt5 import QtWidgets
@@ -367,18 +354,29 @@ class OtherDialog(QDialog):
 class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+        super(MainWindow, self).__init__()
 
         self.setWindowTitle('Sign PDF GUI')
-        
+
+        self.author = kwargs['author']
+        self.version = kwargs['version']
+        self.cliApp = kwargs['cliApp']
+
+        self.title = 'Sign PDF GUI'
+
+        cliAppBasename = os.path.splitext(self.cliApp)[0]
+
         scriptDir = os.path.dirname(os.path.realpath(__file__))
-        iconPath = os.path.sep.join([scriptDir,'icon','pdf-viewer.png'])
+        iconPath = os.path.sep.join([scriptDir,'icon',cliAppBasename])
         self.setWindowIcon(QIcon(iconPath))
 
-        self.author = 'Anjishnu Sarkar'
-        self.version = '0.23'
-        self.title = 'Sign PDF GUI'
-        self.cliApp = 'sign-pdf.py'
+        self.listPdf = [] # List of pdfs
+        self.listImage = [] # List of images
+
+        if 'pdflist' in kwargs.keys() and len(kwargs['pdflist']) > 0 :
+            n = len(kwargs['pdflist'])
+            for i in range(0,n):
+                self.listPdf.append(os.path.realpath(kwargs['pdflist'][i]))
 
         self.left = 10
         self.top = 10
@@ -396,9 +394,6 @@ class MainWindow(QMainWindow):
         self.vbox = QVBoxLayout()
         widget.setLayout(self.vbox)
         
-        self.listPdf = [] # List of pdfs
-        self.listImage = [] # List of images
-
         multiple = False
         threshold = 0.9
         mask = "254,255,254,255,254,255"
@@ -415,6 +410,8 @@ class MainWindow(QMainWindow):
         self.createImageTable()
         self.createButtonBox()
         self.createStatusBar()
+
+        self.updatePdfTable()
 
     def createPdfBox(self):
 
@@ -1136,10 +1133,51 @@ class ImageOptionsDialog(QDialog):
 
 
 def main():
+    
+    scriptname = os.path.basename(sys.argv[0]) 
+    author = 'Anjishnu Sarkar'
+    version = '0.24'
+    cliApp = 'pdf-sign.py'
+    
+    listPdf = [] # List of pdfs
+
+    # Number of arguments supplied via cli
+    numargv = len(sys.argv)-1
+    # Argument count
+    iargv = 1
+
+    # Parse cli options
+    while iargv <= numargv:
+
+        if sys.argv[iargv] == "-h" or sys.argv[iargv] == "--help":
+            helptext(scriptname,author,version)
+            sys.exit(0)
+
+        elif re.search(".pdf$",sys.argv[iargv]):
+            listPdf.extend(glob(sys.argv[iargv]))
+
+        else:
+            print ("%s: Unspecified option: '%s'. Aborting."
+                % (scriptname, sys.argv[iargv]))
+            sys.exit(1)
+
+        iargv += 1    
+    
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow(cliApp = cliApp, author = author, version = version, 
+        pdflist = listPdf)
     window.show()
     sys.exit(app.exec_())
+
+def helptext(sname,athr,vrsn):
+
+    print(sname, ": Sign PDF files with signature (image file)")
+    print("Author :", athr)
+    print("Version :", vrsn)
+    print("")
+    print("For command line usage check", cliApp, "--help")
+    print("The graphical interface is self-explanatory.")
+    return
 
 if __name__ == '__main__':
     main()
